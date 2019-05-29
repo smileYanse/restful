@@ -8,8 +8,12 @@
 
 namespace api\controllers;
 
+use common\models\Adminuser;
 use common\models\Article;
 use yii\data\ActiveDataProvider;
+use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\QueryParamAuth;
+use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 
 class ArticleController extends ActiveController
@@ -23,6 +27,32 @@ class ArticleController extends ActiveController
         unset($actions['index']);
         return $actions;
     }
+
+    //认证状态--方式一.请求参数
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'authenticator' => [
+                'class' => QueryParamAuth::className()
+            ]
+        ]);
+    }
+    //认证状态--方式二.HTTP基本认知
+    /*    public function behaviors()
+        {
+            return ArrayHelper::merge(parent::behaviors(), [
+                'authenticator' => [
+                    'class' => HttpBasicAuth::className(),
+                    'auth' => function ($username, $password) {
+                        $user=Adminuser::find()->where(['username'=>$username])->one();
+                        if($user->validatePassword($password)){
+                            return $user;
+                        }
+                        return null;
+                    }
+                ]
+            ]);
+        }*/
 
     public function actionIndex()
     {
@@ -39,7 +69,6 @@ class ArticleController extends ActiveController
         $keyword = $_POST['key_word'];
         return Article::find()->where(['like', 'content', $keyword])->asArray()->all();
     }
-
 
 
 }

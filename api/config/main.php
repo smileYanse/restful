@@ -17,14 +17,15 @@ return [
             'csrfParam' => '_csrf-api',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'common\models\Adminuser', //认证类 代表用户是adminuser中的
+            'enableAutoLogin' => true, //允许自动登录
+            'enableSession'=>false, //新加
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
-        'session' => [
-            // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-api',
-        ],
+//        'session' => [
+//            // this is the name of the session cookie used for login on the backend
+//            'name' => 'advanced-api',
+//        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -42,6 +43,13 @@ return [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'class'=>'yii\rest\UrlRule',
+                    'controller'=>'adminuser',
+                    'extraPatterns'=>[
+                        'POST login' => 'login'
+                    ],
+                ],
                 [
                     'class'=>'yii\rest\UrlRule',
                     'controller'=>'top10',

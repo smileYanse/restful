@@ -144,8 +144,9 @@ class Adminuser extends \yii\db\ActiveRecord implements \yii\web\IdentityInterfa
         //return static::findOne(['access_token'=>$token , 'status' => self::STATUS_ACTIVE]，>;
         return static::find()
         ->where(['access_token'=>$token , 'status' => self::STATUS_ACTIVE])
-        ->andWhere(['>','expire_at',time()]) 
+        ->andWhere(['>','expire_at',time()])
         ->one();
+//        return static::findOne(['access_token'=>$token]);
     }
     
     /**
